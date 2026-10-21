@@ -1,10 +1,9 @@
 import express from "express";
-import { pool } from "./db.js";
-
+import pool from "./db.js";
 import dotenv from "dotenv";
-dotenv.config();
-
 import cors from "cors";
+
+dotenv.config();
 
 const app = express();
 
@@ -26,7 +25,7 @@ app.get("/", async (req, res) => {
 // Get all employees
 app.get("/employees", async (req, res) => {
   try {
-    const [employees] = await pool.query("SELECT * FROM users");
+    const [employees] = await pool.query("SELECT * FROM employees");
     res.json(employees);
   } catch (error) {
     console.error(error);
@@ -46,7 +45,7 @@ app.post("/add-employee", async (req, res) => {
     }
 
     const [result] = await pool.execute(
-      "INSERT INTO users (name, email, role) VALUES (?, ?, ?)",
+      "INSERT INTO employees (name, email, role) VALUES (?, ?, ?)",
       [name, email, role],
     );
 
@@ -79,7 +78,7 @@ app.put("/update-employee/:id", async (req, res) => {
     }
 
     const [result] = await pool.execute(
-      "UPDATE users SET name = ?, email = ?, role = ? WHERE id = ?",
+      "UPDATE employees SET name = ?, email = ?, role = ? WHERE id = ?",
       [name, email, role, id],
     );
 
@@ -102,7 +101,7 @@ app.put("/update-employee/:id", async (req, res) => {
 // Delete a employee
 app.delete("/delete-employee/:id", async (req, res) =>
   pool
-    .execute("DELETE FROM users WHERE id = ?", [req.params.id])
+    .execute("DELETE FROM employees WHERE id = ?", [req.params.id])
     .then(() => {
       res.json({ message: "Employee deleted successfully" });
     })
@@ -112,7 +111,7 @@ app.delete("/delete-employee/:id", async (req, res) =>
     }),
 );
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
