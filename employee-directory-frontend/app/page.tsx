@@ -20,9 +20,11 @@ export default function Home() {
   const [isEmployeeEditing, setIsEmployeeEditing] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   const fetchEmployees = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/employees");
+      const response = await axios.get(`${API_URL}/employees`);
       setEmployees(response.data);
     } catch (error) {
       console.error(error);
@@ -31,7 +33,7 @@ export default function Home() {
 
   const addEmployee = async () => {
     try {
-      await axios.post("http://localhost:8080/add-employee", newEmployee);
+      await axios.post(`${API_URL}/add-employee`, newEmployee);
 
       await fetchEmployees();
       resetForm();
@@ -43,7 +45,7 @@ export default function Home() {
   const updateEmployee = async (id: number) => {
     try {
       await axios.put(
-        `http://localhost:8080/update-employee/${id}`,
+        `${API_URL}/update-employee/${id}`,
         newEmployee,
       );
 
@@ -56,7 +58,7 @@ export default function Home() {
 
   const deleteEmployee = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:8080/delete-employee/${id}`);
+      await axios.delete(`${API_URL}/delete-employee/${id}`);
 
       await fetchEmployees();
 
